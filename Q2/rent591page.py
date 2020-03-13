@@ -53,7 +53,7 @@ class rentSpider(scrapy.Spider):
         #self.all_df = pd.concat([self.all_df, pd.DataFrame([all_specs_T[1]], columns=all_specs_T[0])])
         _df =  pd.DataFrame([all_specs_T[1]], columns=all_specs_T[0])
         item = rentItem()
-        row = _df.to_dict('r')
+        row = _df.to_dict('r')[0]
 
         item['row'] = row
 
