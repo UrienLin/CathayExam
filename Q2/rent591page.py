@@ -2,15 +2,20 @@ import pandas as pd
 import requests as req
 import scrapy 
 from scrapy import Request
+from scrapy.item import Item,Field
 import time
-
 from selenium import webdriver
+
+class rentItem(Item):
+    row = Field()
+
+
 class rentSpider(scrapy.Spider):
     name = "rent591page"
     all_df = pd.DataFrame()
     def start_requests(self):
-        _df = pd.read_csv('index.csv')
-        for url in _df.link:
+        _df = pd.read_csv('./index.csv')
+        for url in _df.link[:10]:
             yield Request(url)
 
     def parse(self, response):
@@ -45,7 +50,12 @@ class rentSpider(scrapy.Spider):
         all_specs_T[0] += one
         all_specs_T[1] += two
 
-        
-        self.all_df = pd.concat([self.all_df, pd.DataFrame([all_specs_T[1]], columns=all_specs_T[0])])
+        #self.all_df = pd.concat([self.all_df, pd.DataFrame([all_specs_T[1]], columns=all_specs_T[0])])
+        _df =  pd.DataFrame([all_specs_T[1]], columns=all_specs_T[0])
+        item = rentItem()
+        row = _df.to_dict('r')
 
-        self.all_df.to_csv('zz2.csv',index=False)
+        item['row'] = row
+
+        yield item
+        
